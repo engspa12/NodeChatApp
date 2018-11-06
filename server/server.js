@@ -17,30 +17,27 @@ var io = socketIO(server);
 
 app.use(express.static(publicPath));
 
-//Register an event listener
+//Register an Event Listener
 //We normally use only io.on, and then we work with the socket
 io.on('connection',(socket) => {
   console.log('New user connected');
 
-  // socket.emit('newEmail', {
-  //   from: 'mike@example.com',
-  //   text: 'Hey there, hi there',
-  //   createdAt: 123
-  // });
-
-  socket.emit('newMessage', {
-    from: 'Paul Heyman',
-    text: 'Hello again from WWE',
-    createdAt: new Date().getTime()
-  });
-
-  // socket.on('createEmail',(newEmail) => {
-  //   console.log('createEmail', newEmail);
+  // socket.emit('newMessage', {
+  //   from: 'Paul Heyman',
+  //   text: 'Hello again from WWE',
+  //   createdAt: new Date().getTime()
   // });
 
   //Event Listener
-  socket.on('createMessage',(newMessage) => {
-    console.log('createMessage', newMessage);
+  socket.on('createMessage',(message) => {
+    console.log('createMessage', message);
+    //socket.emit() emits an event to a single connection
+    //io.emit() emits an event to every single connection
+    io.emit('newMessage',{
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    });
   });
 
   //Event Listener
@@ -52,9 +49,5 @@ io.on('connection',(socket) => {
 server.listen(port, () => {
    console.log(`Server is up on port ${port}`);
 });
-
-// app.listen(port, () => {
-//    console.log(`Server is up on port ${port}`);
-// });
 
 module.exports = {app};
