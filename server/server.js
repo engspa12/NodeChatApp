@@ -19,7 +19,7 @@ var io = socketIO(server);
 
 app.use(express.static(publicPath));
 
-//Register an Event Listener
+//Register a Default Event Listener
 //We normally use only io.on, and then we work with the socket
 io.on('connection',(socket) => {
   console.log('New user connected');
@@ -34,12 +34,13 @@ io.on('connection',(socket) => {
 
   socket.broadcast.emit('newMessage',generateMessage('Admin','New user joined'));
 
-  //Event Listener
-  socket.on('createMessage',(message) => {
+  //Custom Event Listener
+  socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
     //socket.emit() emits an event to a single connection
     //io.emit() emits an event to every single connection
-    io.emit('newMessage',generateMessage(message.from, message.text));
+    io.emit('newMessage', generateMessage(message.from, message.text));
+    callback('This is from the server.');
     // socket.broadcast.emit('newMessage',{
     //     from: message.from,
     //     text: message.text,
