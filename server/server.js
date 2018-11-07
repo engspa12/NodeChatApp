@@ -40,7 +40,7 @@ io.on('connection',(socket) => {
     //socket.emit() emits an event to a single connection
     //io.emit() emits an event to every single connection
     io.emit('newMessage', generateMessage(message.from, message.text));
-    callback('This is from the server.');
+    callback();
   });
 
   socket.on('createLocationMessage', (coords) => {
