@@ -19,17 +19,34 @@ function scrollToBottom () {
 
 //Default Event Listener
 socket.on('connect', function () {
-  console.log('Connected to server');
+  //console.log('Connected to server');
+  var params = jQuery.deparam(window.location.search);
 
-  // socket.emit('createMessage',{
-  //   from: 'Dario Garlick Stone',
-  //   text: 'Hey, it\'s Daniel, not Dario'
-  // });
+  socket.emit('join', params, function (err) {
+    if (err){
+      alert(err);
+      window.location.href = '/';
+    } else {
+      console.log('No error');
+    }
+  });
 });
 
 //Default Event Listener
 socket.on('disconnect', function () {
   console.log('Disconnected from server');
+});
+
+socket.on('updateUserList', function (users) {
+  // console.log('Users list', users);
+  var ol = jQuery('<ol></ol>');
+
+  users.forEach(function (user) {
+    ol.append(jQuery('<li></li>').text(user));
+  });
+
+  jQuery('#users').html(ol);
+
 });
 
 //Custom Event Listener
